@@ -2,6 +2,7 @@ from store import Store
 from re import compile
 from itertools import islice
 import json
+import os
 
 init_page = 'https://pokemondb.net/pokedex/game/firered-leafgreen'
 base = 'https://pokemondb.net'
@@ -42,7 +43,7 @@ def find_stats(url, page):
     data['locations'] = [{"name": loc.string, "href": loc["href"] } for loc in location_section.find("span", string=compile("Fire")).parent.parent.select("a")]
 
     moves_page = store.get(url + "/moves/3")
-    # moves_page.select("#tab-moves-6")[0].find("h3", string="Moves learnt by level up").parent
+
     learned = []
     learn_table = moves_page.select("#tab-moves-6")[0].find("h3", string="Moves learnt by level up").find_next("table")
     for move in learn_table.select('tr')[1:]:
@@ -81,6 +82,8 @@ def main():
     page = store.get(init_page)
     pokemons = page.select('.infocard-list a.ent-name')
 
+    os.makedirs("data/pokemon", exist_ok=True)
+
     pokemon_pages = (
         (base + pokemon['href'], store.get(base + pokemon['href']))
         for pokemon in pokemons
@@ -90,7 +93,7 @@ def main():
         print(url)
         data_sheet = find_stats(url, page)
 
-        with open(f"data/{data_sheet['name']}.json", 'w') as fp:
+        with open(f"data/pokemon/{data_sheet['name']}.json", 'w') as fp:
             json.dump(data_sheet, fp)
 
 
