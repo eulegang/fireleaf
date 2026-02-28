@@ -53,8 +53,8 @@ def find_stats(url, page):
             "name": name,
             "type": ty,
             "category": cat,
-            "power": power,
-            "accuracy": acc,
+            "power": int(power) if power.isdigit() else None,
+            "accuracy": int(acc) if acc.isdigit() else None,
         })
 
     tms = []
@@ -66,8 +66,8 @@ def find_stats(url, page):
             "name": name,
             "type": ty,
             "category": cat,
-            "power": power,
-            "accuracy": acc,
+            "power": int(power) if power.isdigit() else None,
+            "accuracy": int(acc) if acc.isdigit() else None,
         })
 
     data['moves'] = {

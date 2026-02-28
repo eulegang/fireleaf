@@ -37,41 +37,42 @@ create table ev (
 
 create table types(
   id serial primary key,
-  name varchar(16)
+  name varchar(16) unique not null,
+  category move_category not null
 );
 
 create table pokemon(
   id serial primary key,
-  name varchar not null,
-  primary_type serial references types(id) not null,
-  secondary_type serial references types(id),
+  name varchar not null unique,
+  primary_type integer references types(id) not null,
+  secondary_type integer references types(id),
   growth growth not null,
   stats stats not null
 );
 
 create table moves(
   id serial primary key,
-  name varchar(32) not null,
-  ty serial references types(id) not null,
-  power int not null,
-  accuracy int not null
+  name varchar(32) not null unique,
+  ty integer references types(id) not null,
+  power int,
+  accuracy int
 );
 
 create table pokemon_ev(
-  pokemon_id serial references pokemon(id) not null,
-  ev_id serial references ev(id) not null
+  pokemon_id integer references pokemon(id) not null,
+  ev_id integer references ev(id) not null
 );
 
 create table pokemon_moves(
-  pokemon_id serial references pokemon(id) not null,
-  move_id serial references moves(id) not null,
+  pokemon_id integer references pokemon(id) not null,
+  move_id integer references moves(id) not null,
   level int,
   tm int
 );
 
-insert into types (name) values
-  ('Normal'), ('Fire'), ('Water'), ('Electric'),
-  ('Grass'), ('Ice'), ('Fighting'), ('Poison'),
-  ('Ground'), ('Flying'), ('Psychic'), ('Bug'),
-  ('Rock'), ('Ghost'), ('Dragon'), ('Dark'),
-  ('Steel'), ('Fairy');
+insert into types (name, category) values
+  ('Normal', 'Physical'), ('Fire', 'Special'), ('Water', 'Special'), ('Electric', 'Special'),
+  ('Grass', 'Special'), ('Ice', 'Special'), ('Fighting', 'Physical'), ('Poison', 'Physical'),
+  ('Ground', 'Physical'), ('Flying', 'Physical'), ('Psychic', 'Special'), ('Bug', 'Physical'),
+  ('Rock', 'Physical'), ('Ghost', 'Physical'), ('Dragon', 'Special'), ('Dark', 'Special'),
+  ('Steel', 'Physical'), ('Fairy', 'Special'), ('???', 'Special');
