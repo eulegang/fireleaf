@@ -18,3 +18,7 @@ and loads the individual entries into data/pokemon/{pokemon}.json
 
 takes the flat files in data/pokemon/*.json and load the entries
 (with moves, locations, other such things) into the postgres database
+
+### Queries
+
+Run queries as you like there are some prebuilt ones in `/queries`
