@@ -14,6 +14,9 @@ moves = set()
 
 store = Store()
 
+def routify(r):
+    return "Route " + r if r.isdigit() else r
+
 def find_stats(url, page):
     data = {}
     title = page.find("title").string
@@ -40,7 +43,9 @@ def find_stats(url, page):
 
 
     location_section = page.find("h2", string=where_to_find).parent
-    data['locations'] = [{"name": loc.string, "href": loc["href"] } for loc in location_section.find("span", string=compile("Fire")).parent.parent.select("a")]
+    locs = [{"name": routify(loc.string), "href": loc["href"] } for loc in location_section.find("span", string=compile("Fire")).parent.parent.select("a")]
+    locs.extend([{"name": routify(loc.string), "href": loc["href"] } for loc in location_section.find("span", string=compile("Leaf")).parent.parent.select("a")])
+    data["locations"] = [{"name": name, "href": href } for name, href in { loc["name"]: loc["href"] for loc in locs }.items()]
 
     moves_page = store.get(url + "/moves/3")
 

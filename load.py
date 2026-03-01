@@ -133,6 +133,24 @@ def main():
                 if not cur.fetchone():
                     cur.execute("insert into pokemon_ev (pokemon_id, ev_id) values (%s, %s)", (pokemon_id, ev_id))
 
+        with conn.cursor() as cur:
+            for location in data['locations']:
+                if not location['href'].startswith("/location"):
+                    continue
+
+                name = location['name']
+                cur.execute("select id from locations where name = %s", (name,))
+                if res := cur.fetchone():
+                    loc_id = res[0]
+                else:
+                    cur.execute("insert into locations (name) values (%s) returning id", (name,))
+                    loc_id, = cur.fetchone()
+                
+                cur.execute("select * from pokemon_locations where pokemon_id = %s and location_id = %s", (pokemon_id, loc_id))
+                if not cur.fetchone():
+                    cur.execute("insert into pokemon_locations (pokemon_id, location_id) values(%s, %s)", (pokemon_id, loc_id))
+                    
+
 
     conn.commit()
 

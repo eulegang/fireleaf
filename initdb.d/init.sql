@@ -50,6 +50,11 @@ create table pokemon(
   stats stats not null
 );
 
+create table locations(
+  id serial primary key,
+  name varchar not null unique
+);
+
 create table moves(
   id serial primary key,
   name varchar(32) not null unique,
@@ -68,6 +73,11 @@ create table pokemon_moves(
   move_id integer references moves(id) not null,
   level int,
   tm int
+);
+
+create table pokemon_locations(
+  pokemon_id integer references pokemon(id) not null,
+  location_id integer references locations(id) not null
 );
 
 insert into types (name, category) values
